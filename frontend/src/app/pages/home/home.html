@@ -1,0 +1,65 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">EventBooking</a>
+  </div>
+</nav>
+
+<section class="hero text-center py-5">
+  <h1>Welcome to Event Booking Platform</h1>
+  <p class="lead">Plan, host, and enjoy unforgettable events with ease.</p>
+  <div class="d-flex justify-content-center gap-3 mt-3">
+    <a class="btn btn-lg btn-primary flex-fill" routerLink="/events">Browse Events</a>
+    <a routerLink="/events/add" class="btn btn-lg btn-outline-primary flex-fill">Create Event</a>
+  </div>
+</section>
+
+<section class="featured-events text-center py-5">
+  <div class="container">
+    <h2 class="mb-4">Upcoming Events</h2>
+    <div class="d-flex flex-wrap justify-content-center gap-4">
+
+      @for (event of events; track event.id) {
+
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+
+            <h5 class="card-title">{{ event.name }}</h5>
+
+            <p class="card-text text-muted">
+              {{ event.location }} • {{ event.date }}
+            </p>
+
+            @if (event.availableSeats == 0) {
+              <span class="text-danger fw-bold d-block text-center mt-2">
+                    Sold Out
+                </span>
+            } @else {
+              <a [routerLink]="['/bookings/create', event.id]"
+                 [queryParams]="{from: '/events'}"
+                 class="btn btn-primary w-100 mt-2">
+                Book Now
+              </a>
+            }
+
+          </div>
+        </div>
+
+      }
+
+    </div>
+  </div>
+</section>
+
+<section class="newsletter text-center py-5">
+  <h3>Stay Updated!</h3>
+  <p>Subscribe to get the latest events and offers.</p>
+  <form class="d-flex justify-content-center mt-3">
+    <label for="newsletterEmail" class="visually-hidden">Email address</label>
+    <input type="email" id="newsletterEmail" class="form-control w-25" placeholder="Enter your email">
+    <button type="submit" class="btn btn-success ms-2">Subscribe</button>
+  </form>
+</section>
+
+<footer class="text-center py-3 mt-4">
+  © 2026 EventBookingPlatform
+</footer>
