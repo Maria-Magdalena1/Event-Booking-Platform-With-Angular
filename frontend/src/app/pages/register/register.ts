@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
-import {FormsModule} from '@angular/forms';
+import {form,FormField} from '@angular/forms/signals';
 import {RegisterRequest} from '../../models/register-request';
 import {AuthService} from '../../services/auth.service';
 
@@ -9,18 +9,20 @@ import {AuthService} from '../../services/auth.service';
   standalone: true,
   imports: [
     RouterLink,
-    FormsModule
+    FormField
   ],
   templateUrl: './register.html',
   styleUrl: '../../shared/event-register-login-form.css',
 })
 export class Register {
-  registerRequest: RegisterRequest = {
+  registerRequest=signal<RegisterRequest>({
     username: '',
     email: '',
     password: '',
     confirmPassword: ''
-  };
+  });
+
+  registerForm=form(this.registerRequest);
 
   errors: { [key: string]: string } = {};
   registrationSuccessful = '';
@@ -28,18 +30,17 @@ export class Register {
   constructor(
     private authService: AuthService,
     private router: Router,
-  ) {
-  }
+  ) {}
 
   register() {
     this.errors = {};
     this.registrationSuccessful = '';
 
-    if (this.registerRequest.password !== this.registerRequest.confirmPassword) {
+    if (this.registerRequest().password !== this.registerRequest().confirmPassword) {
       this.errors['confirmPassword'] = 'Passwords do not match';
       return;
     }
-    this.authService.register(this.registerRequest).subscribe(
+    this.authService.register(this.registerRequest()).subscribe(
       {
         next: () => {
           this.registrationSuccessful = 'Registration successful';

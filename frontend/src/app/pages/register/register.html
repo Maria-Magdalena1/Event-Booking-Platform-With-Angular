@@ -8,7 +8,6 @@
     </div>
   </div>
 </nav>
-<!-- da vidq dali shte stane 2 puti navigaciqta mislq che si beshe otdelna zatova -->
 
 <div class="register-container">
   <div class="register-card">
@@ -19,9 +18,10 @@
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
         <input
-          [(ngModel)]="registerRequest.username"
+          [formField]="registerForm.username"
           name="username"
-          type="text" class="form-control" id="username"
+          class="form-control"
+          id="username"
           placeholder="Enter username" required>
 
         @if (errors['username']) {
@@ -32,7 +32,7 @@
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input
-          [(ngModel)]="registerRequest.email"
+          [formField]="registerForm.email"
           name="email"
           type="email"
           class="form-control"
@@ -51,7 +51,7 @@
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
         <input
-          [(ngModel)]="registerRequest.password"
+          [formField]="registerForm.password"
           name="password"
           type="password"
           class="form-control"
@@ -70,7 +70,7 @@
       <div class="mb-3">
         <label for="confirmPassword" class="form-label">Confirm Password</label>
         <input
-          [(ngModel)]="registerRequest.confirmPassword"
+          [formField]="registerForm.confirmPassword"
           name="confirmPassword"
           type="password"
           class="form-control"
