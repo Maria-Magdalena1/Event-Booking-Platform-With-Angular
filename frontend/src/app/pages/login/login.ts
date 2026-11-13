@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
+import {Component,signal} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
-import {FormsModule} from '@angular/forms';
+import {form,FormField} from '@angular/forms/signals';
 import {AuthService} from '../../services/auth.service';
 import {LoginRequest} from '../../models/login-request';
 
@@ -9,16 +9,18 @@ import {LoginRequest} from '../../models/login-request';
   standalone: true,
   imports: [
     RouterLink,
-    FormsModule
+    FormField
   ],
   templateUrl: './login.html',
   styleUrl: '../../shared/event-register-login-form.css',
 })
 export class Login {
-  loginRequest: LoginRequest = {
+  loginRequest=signal<LoginRequest>({
     username: '',
     password: '',
-  };
+  });
+
+  loginForm=form(this.loginRequest);
 
   errorMessage='';
 
@@ -30,7 +32,7 @@ export class Login {
 
   login() {
     this.errorMessage = '';
-    this.authService.login(this.loginRequest).subscribe(
+    this.authService.login(this.loginRequest()).subscribe(
       {
         next: (response) => {
           console.log('Login successful!', response);

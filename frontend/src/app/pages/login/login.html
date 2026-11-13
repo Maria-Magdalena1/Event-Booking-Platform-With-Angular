@@ -17,15 +17,15 @@
     <form (ngSubmit)="login()">
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
-        <input name="username" type="text" class="form-control" id="username" placeholder="Enter username"
-               [(ngModel)]="username"
+        <input name="username" class="form-control" id="username" placeholder="Enter username"
+               [(formField)]="username"
                required>
       </div>
 
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
         <input name="password" type="password" class="form-control" id="password" placeholder="Enter password"
-               [(ngModel)]="password" required>
+               [(formField)]="password" required>
       </div>
 
       @if (errorMessage) {
