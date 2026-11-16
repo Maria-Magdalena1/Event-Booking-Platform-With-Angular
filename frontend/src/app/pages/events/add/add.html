@@ -1,25 +1,38 @@
-<div class="d-flex justify-content-center align-items-center min-vh-100" xmlns:th="http://www.w3.org/1999/xhtml">
-
+<div
+  class="d-flex justify-content-center align-items-center min-vh-100"
+  xmlns:th="http://www.w3.org/1999/xhtml"
+>
   <div class="w-100 mb-3">
     <a routerLink="/events" class="btn btn-outline-secondary back-button">&larr Back</a>
   </div>
 
   <div class="form-wrapper">
     @if (successMessage) {
-      <div class="alert alert-success alert-dismissible fade show custom-alert"
-           role="alert">
+      <div class="alert alert-success alert-dismissible fade show custom-alert" role="alert">
         {{ successMessage }}
-        <button type="button" class="btn-close" (click)="successMessage=''" data-bs-dismiss="alert"
-                aria-label="Close"></button>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="successMessage = ''"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
       </div>
     }
     <h2>Add New Event</h2>
 
     <form th:action="@{/events/add-event}" th:object="${event}" method="post">
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
       <div class="mb-3">
         <label for="name" class="form-label">Event Name</label>
-        <input type="text" id="name" name="name" [(ngModel)]="event.name" class="form-control" required>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          [(ngModel)]="event.name"
+          class="form-control"
+          required
+        />
 
         <!--        <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
 -->
@@ -30,20 +43,37 @@
 
       <div class="mb-3">
         <label for="description" class="form-label">Description</label>
-        <textarea id="description" name="description" [(ngModel)])]="event.description" class="form-control"></textarea>
+        <textarea
+          id="description"
+          name="description"
+          [(ngModel)])]="event.description"
+          class="form-control"
+        ></textarea>
 
         @if (errors['description']) {
           <div class="text-danger">{{ errors['description'] }}</div>
         }
-        <button type="button" id="generateBtn" class="btn btn-info mt-2" (click)="generateDescription()"
-                [disabled]="!event.name.trim()">Generate Description
+        <button
+          type="button"
+          id="generateBtn"
+          class="btn btn-info mt-2"
+          (click)="generateDescription()"
+          [disabled]="!event.name.trim()"
+        >
+          Generate Description
         </button>
       </div>
 
       <div class="mb-3">
         <label for="startDate" class="form-label">Start Date</label>
-        <input type="datetime-local" id="startDate" name="startDate" [(ngModel)]="event.startDate"
-               class="form-control" required>
+        <input
+          type="datetime-local"
+          id="startDate"
+          name="startDate"
+          [(ngModel)]="event.startDate"
+          class="form-control"
+          required
+        />
         @if (errors['startDate']) {
           <div class="text-danger">{{ errors['startDate'] }}</div>
         }
@@ -51,8 +81,14 @@
 
       <div class="mb-3">
         <label for="endDate" class="form-label">End Date</label>
-        <input type="datetime-local" id="endDate" name="endDate" [(ngModel)]="event.endDate"
-               class="form-control" required>
+        <input
+          type="datetime-local"
+          id="endDate"
+          name="endDate"
+          [(ngModel)]="event.endDate"
+          class="form-control"
+          required
+        />
 
         @if (errors['endDate']) {
           <div class="text-danger">{{ errors['endDate'] }}</div>
@@ -61,8 +97,14 @@
 
       <div class="mb-3">
         <label for="venue" class="form-label">Venue</label>
-        <input type="text" id="venue" name="venue" [(ngModel)]="event.venue"
-               class="form-control" required>
+        <input
+          type="text"
+          id="venue"
+          name="venue"
+          [(ngModel)]="event.venue"
+          class="form-control"
+          required
+        />
 
         @if (errors['venue']) {
           <div class="text-danger">{{ errors['venue'] }}</div>
@@ -78,7 +120,7 @@
           [(ngModel)]="event.location"
           class="form-control"
           required
-        >
+        />
 
         @if (errors['location']) {
           <div class="text-danger">{{ errors['location'] }}</div>
@@ -96,7 +138,7 @@
           step="0.01"
           min="0"
           required
-        >
+        />
 
         @if (errors['price']) {
           <div class="text-danger">{{ errors['price'] }}</div>
@@ -113,7 +155,7 @@
           class="form-control"
           min="1"
           required
-        >
+        />
 
         @if (errors['totalSeats']) {
           <div class="text-danger">{{ errors['totalSeats'] }}</div>
@@ -121,12 +163,11 @@
       </div>
 
       <button type="submit" class="btn btn-success" [disabled]="eventForm.invalid">
-        Add Event</button>
+        Add Event
+      </button>
     </form>
   </div>
-
 </div>
-
 
 <!-- tova go slagame v .ts
 import { Component } from '@angular/core';
@@ -233,21 +274,20 @@ export class AddEventComponent {
 }
 -->
 <script>
-  const titleInput = document.getElementById("name");
-  const descTextarea = document.getElementById("description");
-  const generateBtn = document.getElementById("generateBtn");
+  const titleInput = document.getElementById('name');
+  const descTextarea = document.getElementById('description');
+  const generateBtn = document.getElementById('generateBtn');
 
-  generateBtn.addEventListener("click", () => {
+  generateBtn.addEventListener('click', () => {
     const title = titleInput.value.trim();
     if (!title) {
-      alert("Please enter the event title first!");
+      alert('Please enter the event title first!');
       return;
     }
 
     fetch(`/ai/description?title=${encodeURIComponent(title)}`)
-      .then(res => res.json())
-      .then(data => descTextarea.value = data.description)
-      .catch(err => alert("Failed to generate description. Try again." + err));
+      .then((res) => res.json())
+      .then((data) => (descTextarea.value = data.description))
+      .catch((err) => alert('Failed to generate description. Try again.' + err));
   });
 </script>
-

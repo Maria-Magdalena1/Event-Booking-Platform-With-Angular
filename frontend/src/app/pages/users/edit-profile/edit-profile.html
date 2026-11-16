@@ -12,20 +12,31 @@
 -->
 
       <label for="username">Username:</label>
-      <input type="text" id="username" name="username"
-      [(ngModel)]="user.username" required
-      >
+      <input type="text" id="username" name="username" [(ngModel)]="user.username" required />
 
       <label for="firstName">Name:</label>
-      <input type="text" id="firstName" name="name" [(ngModel)]="user.name" placeholder="Enter your name">
+      <input
+        type="text"
+        id="firstName"
+        name="name"
+        [(ngModel)]="user.name"
+        placeholder="Enter your name"
+      />
 
       <label for="age">Age:</label>
-      <input type="number" id="age" name="age" [(ngModel)]="user.age" min="0" placeholder="Enter your age">
+      <input
+        type="number"
+        id="age"
+        name="age"
+        [(ngModel)]="user.age"
+        min="0"
+        placeholder="Enter your age"
+      />
       <div>
         <button type="submit" class="btn">Save Changes</button>
       </div>
     </form>
-    <div style="margin-top: 15px; text-align: center;">
+    <div style="margin-top: 15px; text-align: center">
       <a routerLink="/user/profile" class="btn btn-secondary">Back to Profile</a>
     </div>
   </div>

@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
-import {RouterLink} from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-details',
-  imports: [
-    RouterLink
-  ],
+  imports: [RouterLink],
   templateUrl: './details.html',
   styleUrl: '../../../shared/event-form.css',
 })
