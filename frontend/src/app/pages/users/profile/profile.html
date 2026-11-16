@@ -1,0 +1,200 @@
+<div class="container mt-5">
+
+  @if (isAdmin) {
+
+    <div class="d-flex justify-content-end mb-3">
+      <a routerLink="/admin/analytics/dashboard" class="btn btn-primary">
+        Admin Dashboard
+      </a>
+    </div>
+  }
+  <div class="d-flex justify-content-center mb-5">
+    <div class="profile-card card text-center shadow-sm p-4" style="width: 22rem;">
+      <h2>{{ user.username }}</h2>
+      <p class="text-muted mb-3">{{ user.email }}</p>
+
+      <p><strong>Name:</strong>
+        {{ user.name || 'Not set' }}
+      </p>
+
+      <p><strong>Age:</strong>
+        {{ user.age ?? 'Not set' }}
+      </p>
+
+      <p><strong>Joined:</strong>
+        {{ user.createdAt | date:'dd MMM yyyy' }}
+      </p>
+      <p><strong>Role:</strong>{{ user.role }}</p>
+
+      <div class="mt-3">
+        <a routerLink="/user/profile/edit" class="btn btn-primary me-2">Edit Profile</a>
+        <!--<a th:href="@{/logout}" class="btn btn-outline-secondary">Logout</a> -->
+        <button (click)="logout()"
+                class="btn btn-outline-secondary">
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion" id="profileAccordion">
+
+    @if (isAdmin) {
+      <div class="accordion-item mb-3">
+        <h2 class="accordion-header" id="headingAllUsers">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapseAllUsers" aria-expanded="false" aria-controls="collapseAllUsers">
+            All Users
+          </button>
+        </h2>
+        <div id="collapseAllUsers" class="accordion-collapse collapse"
+             aria-labelledby="headingAllUsers" data-bs-parent="#profileAccordion">
+          <div class="accordion-body">
+            @if (allUsers.length > 0) {
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    @for (u of allUsers; track u.id) {
+                      <tr>
+                        <td>{{ u.username }}</td>
+                        <td>{{ u.email }}</td>
+                        <td>{{ u.role }}</td>
+                        <td>
+                          <span [class.text-success]="u.active"
+                                [class.text-danger]="!u.active">
+                            {{ u.active ? 'Active' : 'Blocked' }}
+                          </span>
+                        <td>
+                          <button type="button"
+                                  class="btn btn-sm"
+                                  [class.btn-danger]="u.active"
+                                  [class.btn-success]="!u.active"
+                                  (click)="toggleUserStatus(u)">
+
+                            {{ u.active ? 'Block' : 'Unblock' }}
+                          </button>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            } @else {
+              <p class="text-muted">
+                No users found.
+              </p>
+            }
+          </div>
+        </div>
+      </div>
+    }
+    <div class="accordion-item mb-3">
+      <h2 class="accordion-header" id="headingCreatedEvents">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseCreatedEvents" aria-expanded="false"
+                aria-controls="collapseCreatedEvents">
+          Your Created Events
+        </button>
+      </h2>
+      <div id="collapseCreatedEvents" class="accordion-collapse collapse"
+           aria-labelledby="headingCreatedEvents" data-bs-parent="#profileAccordion">
+        <div class="accordion-body">
+          @if (createdEvents.length > 0) {
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+              @for (event of createdEvents; track event.id) {
+                <div class="col">
+                  <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ event.name }}</h5>
+                      <p><strong>Start Date:</strong>
+                        {{ event.startDate | date:'dd MMM yyyy' }}
+                      </p>
+                      <p><strong>End Date:</strong>
+                        {{ event.endDate | date:'dd MMM yyyy' }}
+                      </p>
+                      <p><strong>Total Seats:</strong>
+                        {{ event.totalSeats }}
+                      </p>
+                      <p><strong>Available Seats:</strong>
+                        {{ event.availableSeats }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="text-muted">
+              You have not created any events yet.</p>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingBookings">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseBookings" aria-expanded="false" aria-controls="collapseBookings">
+          Your Bookings
+        </button>
+      </h2>
+      <div id="collapseBookings" class="accordion-collapse collapse" aria-labelledby="headingBookings"
+           data-bs-parent="#profileAccordion">
+        <div class="accordion-body">
+          @if (bookings.length > 0) {
+
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+              @for (booking of bookings; track booking.id) {
+
+                <div class="col">
+                  <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ booking.event.name }}</h5>
+                      <p><strong>Start Date:</strong>
+                        {{ booking.event.startDate | date:'dd MMM yyyy' }}
+                      </p>
+                      <p><strong>End Date:</strong>
+                        {{ booking.event.endDate | date:'dd MMM yyyy' }}
+                      </p>
+                      <p class="card-text"><strong>Booking Made:</strong>
+                        {{ booking.bookedOn | date:'dd MMM yyyy HH:mm' }}
+                      </p>
+
+                      <p><strong>Seats Booked:</strong>{{ booking.seatsBooked }}
+                      </p>
+                      <p><strong>Status:</strong>
+                        <span
+                        [class.text-success]="booking.status.name ==='CONFIRMED'"
+                        [class.text-danger]="booking.status.name === 'CANCELLED'"
+                        [class.text-warning]="booking.status.name !== 'CONFIRMED' && booking.status.name !== 'CANCELLED'">
+                        {{ booking.status.displayName }}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="text-muted">
+              You have not booked any events yet.</p>
+          }
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="footer text-center mt-5 mb-3 text-muted">
+  &copy; 2026 EventBookingPlatform
+</footer>
