@@ -1,0 +1,103 @@
+<div class="container">
+
+  <h2 class="text-center mb-5">Admin Analytics Dashboard</h2>
+
+  <div class="row g-4 mb-5">
+    <div class="col-md-3">
+      <div class="card shadow-sm p-4 text-center">
+        <h5>Total Users</h5>
+        <h2>{{ totalUsers }}</h2>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm p-4 text-center">
+        <h5>Total Events</h5>
+        <h2>{{totalEvents }}</h2>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm p-4 text-center">
+        <h5>Total Bookings</h5>
+        <h2>{{ totalBookings }}</h2>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm p-4 text-center">
+        <h5>Total Revenue</h5>
+        <h2>{{ totalRevenue | number:'1.2-2' }} лв</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm p-4 mb-4">
+    <h4 class="mb-4">Top Events</h4>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+        <tr>
+          <th>Event</th>
+          <th>Bookings</th>
+        </tr>
+        </thead>
+        <tbody>
+          @if (topEvents.length === 0) {
+            <tr>
+              <td colspan="2" class="text-center">No top events</td>
+            </tr>
+          } @else {
+            @for (row of topEvents; track row.name) {
+              <tr>
+                <td>{{ row.name }}</td>
+
+                <td>
+                  <span
+                    [class.badge-high]="row.totalSeatsBooked >15"
+                    [class.badge-medium]="row.totalSeatsBooked > 7 && row.totalSeatsBooked <= 15"
+                    [class.badge-low]="row.totalSeatsBooked <= 7">
+
+                    {{row.totalSeatsBooked}}
+                  </span>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card shadow-sm p-4 mb-4">
+    <h4 class="mb-4">Seat Warnings</h4>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+        <tr>
+          <th>Event</th>
+          <th>Free Seats</th>
+        </tr>
+        </thead>
+        <tbody>
+
+          @if (seatWarnings.length === 0) {
+            <tr>
+              <td colspan="2" class="text-center">No events at risk</td>
+            </tr>
+          } @else {
+            @for (row of seatWarnings; track row.eventName) {
+              <tr>
+                <td>{{ row.eventName }}</td>
+                <td>{{ row.freeSeats }}</td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <button type="button" (click)="goBack()" class="btn btn-success">← Back</button>
+  </div>
+
+</div>
