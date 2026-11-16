@@ -1,13 +1,13 @@
 import { Component, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { form, FormField } from '@angular/forms/signals';
+import { form, FormField, FormRoot,required} from '@angular/forms/signals';
 import { AuthService } from '../../services/auth.service';
 import { LoginRequest } from '../../models/login-request';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink, FormField],
+  imports: [RouterLink, FormField,FormRoot],
   templateUrl: './login.html',
   styleUrl: '../../shared/event-register-login-form.css',
 })
@@ -17,29 +17,37 @@ export class Login {
     password: '',
   });
 
-  loginForm = form(this.loginRequest);
-
-  errorMessage = '';
+  errorMessage = signal('');
 
   constructor(
     private authService: AuthService,
     private router: Router,
   ) {}
 
-  login() {
-    this.errorMessage = '';
-    this.authService.login(this.loginRequest()).subscribe({
-      next: (response) => {
-        console.log('Login successful!', response);
-        this.router.navigate(['/events']);
+  loginForm = form(
+    this.loginRequest,
+    (path)=>{
+      required(path.username);
+      required(path.password);
+    },
+    {
+      submission: {
+        action: async () => {
+          this.errorMessage.set('');
 
-        //i have a warning "Promise returned from navigate is ignored"
-        //do we have to add .then(r => )
-        //same in the register
-      },
-      error: (error) => {
-        this.errorMessage = error.error?.message || 'Invalid username or password';
-      },
-    });
-  }
+          this.authService.login(this.loginRequest()).subscribe({
+            next: (response) => {
+              console.log('Login successful!', response);
+              void this.router.navigate(['/events']);
+            },
+            error: (error) => {
+              this.errorMessage.set(
+                error.error?.message || 'Invalid username or password'
+              );
+            },
+          });
+        }
+      }
+    }
+  );
 }

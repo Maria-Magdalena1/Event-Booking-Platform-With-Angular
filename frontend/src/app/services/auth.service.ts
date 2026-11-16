@@ -1,9 +1,8 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable,tap } from 'rxjs';
 import { RegisterRequest } from '../models/register-request';
 import { LoginRequest } from '../models/login-request';
-import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,14 +12,14 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  register(registerRequest: RegisterRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, registerRequest);
+  register(registerRequest: RegisterRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/register`, registerRequest);
   }
 
   isAuthenticated = signal(false);
 
-  login(loginRequest: LoginRequest): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, loginRequest).pipe(
+  login(loginRequest: LoginRequest): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/login`, loginRequest).pipe(
       tap(() => {
         this.isAuthenticated.set(true);
       }),

@@ -14,7 +14,7 @@
     <h2>Create Your Account</h2>
     <p>Join the community and start booking amazing events!</p>
 
-    <form (ngSubmit)="register()">
+    <form [formRoot]="registerForm">
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
         <input
@@ -23,12 +23,7 @@
           class="form-control"
           id="username"
           placeholder="Enter username"
-          required
         />
-
-        @if (errors['username']) {
-          <div class="text-danger small mt-1">{{ errors['username'] }}</div>
-        }
       </div>
 
       <div class="mb-3">
@@ -40,14 +35,7 @@
           class="form-control"
           id="email"
           placeholder="Enter email"
-          required
         />
-
-        @if (errors['email']) {
-          <div class="text-danger small mt-1">
-            {{ errors['email'] }}
-          </div>
-        }
       </div>
 
       <div class="mb-3">
@@ -59,14 +47,7 @@
           class="form-control"
           id="password"
           placeholder="Enter password"
-          required
         />
-
-        @if (errors['password']) {
-          <div class="text-danger small mt-1">
-            {{ errors['password'] }}
-          </div>
-        }
       </div>
 
       <div class="mb-3">
@@ -78,26 +59,26 @@
           class="form-control"
           id="confirmPassword"
           placeholder="Confirm password"
-          required
         />
-
-        @if (errors['confirmPassword']) {
-          <div class="text-danger small mt-1">
-            {{ errors['confirmPassword'] }}
-          </div>
-        }
       </div>
+
+      @if (errorMessage()) {
+        <div class="alert alert-danger mt-3 text-center">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      @if (registrationSuccessful()) {
+        <div class="alert alert-success mt-3 text-center">
+          {{ registrationSuccessful() }}
+        </div>
+      }
 
       <button type="submit" class="btn btn-success w-100">Register</button>
     </form>
 
     <p class="mt-3">Already have an account? <a routerLink="/login">Login here</a></p>
 
-    @if (registrationSuccessful) {
-      <div class="alert alert-success mt-3 text-center">
-        {{ registrationSuccessful }}
-      </div>
-    }
   </div>
 </div>
 
