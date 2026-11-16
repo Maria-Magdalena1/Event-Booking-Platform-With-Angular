@@ -1,6 +1,5 @@
 <div class="container my-5">
   @if (event) {
-
     <div class="card shadow-lg p-4 mb-5 bg-white">
       <div class="card-body">
         <h1 class="card-title text-center mb-4">{{ event.name }}</h1>
@@ -11,14 +10,19 @@
 
         <div class="row mb-3">
           <div class="col-md-6">
-            <p><strong>Venue:</strong> <span>{{ event.venue }}</span></p>
-            <p><strong>Location:</strong> <span>{{ event.location }}</span></p>
+            <p>
+              <strong>Venue:</strong> <span>{{ event.venue }}</span>
+            </p>
+            <p>
+              <strong>Location:</strong> <span>{{ event.location }}</span>
+            </p>
           </div>
           <div class="col-md-6">
-            <p><strong>Date:</strong>
-              <span>{{ event.startDate | date:'dd MMM yyyy HH:mm' }}</span>
+            <p>
+              <strong>Date:</strong>
+              <span>{{ event.startDate | date: 'dd MMM yyyy HH:mm' }}</span>
               -
-              <span>{{ event.endDate | date:'dd MMM yyyy HH:mm' }}</span>
+              <span>{{ event.endDate | date: 'dd MMM yyyy HH:mm' }}</span>
             </p>
             <p><strong>Price:</strong> €{{ event.price }}</p>
             <p><strong>Available Seats:</strong>{{ event.availableSeats }}</p>
@@ -27,7 +31,7 @@
 
         <div class="text-center mt-4">
           @if (event.canBook) {
-            <a [routerLink]="['/bookings/create',event.id]" class="btn btn-success btn-lg">
+            <a [routerLink]="['/bookings/create', event.id]" class="btn btn-success btn-lg">
               Book Now
             </a>
           }
@@ -39,13 +43,10 @@
       </div>
     </div>
   } @else {
-    <div class="text-center">
-      Loading event details...
-    </div>
+    <div class="text-center">Loading event details...</div>
   }
 
   <div class="text-center">
     <a routerLink="/events" class="btn btn-outline-secondary mt-3">&lArr; Back to Events</a>
   </div>
-
 </div>

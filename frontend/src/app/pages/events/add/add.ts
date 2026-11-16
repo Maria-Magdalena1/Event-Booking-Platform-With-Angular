@@ -1,13 +1,10 @@
 import { Component } from '@angular/core';
-import {RouterLink} from '@angular/router';
-import {FormsModule} from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-add',
-  imports: [
-    RouterLink,
-    FormsModule
-  ],
+  imports: [RouterLink, FormsModule],
   templateUrl: './add.html',
   styleUrl: './add.css',
 })

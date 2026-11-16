@@ -1,10 +1,21 @@
-<div class="top-bar" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<div
+  class="top-bar"
+  xmlns:th="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.w3.org/1999/xhtml"
+>
   <nav class="navbar navbar-expand-lg peachy-navbar">
     <div class="container-fluid">
       <a class="navbar-brand" routerLink="/">Event Booking</a>
 
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
         <span class="navbar-toggler-icon"></span>
       </button>
 
@@ -30,9 +41,12 @@
   <div class="container mt-3">
     <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
       {{ successMessage }}
-      <button type="button" class="btn-close"
-              (click)="successMessage = ''"
-              aria-label="Close"></button>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="successMessage = ''"
+        aria-label="Close"
+      ></button>
     </div>
   </div>
 }
@@ -41,7 +55,12 @@
   <div class="container mt-3">
     <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
       {{ errorMessage }}
-      <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="errorMessage = ''"
+        aria-label="Close"
+      ></button>
     </div>
   </div>
 }
@@ -50,12 +69,8 @@
   <h2 class="fw-bold text-center mb-5">🎉 Upcoming Events</h2>
 
   @if (events.length > 0) {
-
     <div class="row">
-
-      @for (ev of events; track ev.id) {
-
-      }
+      @for (ev of events; track ev.id) {}
       <div class="col-md-4 mb-4">
         <div class="card event-card h-90">
           <div class="card-body">
@@ -66,28 +81,32 @@
 
             @if (ev.canBook) {
               <a
-                [routerLink]="['/bookings/create',ev.id]"
-                [queryParams]="{from: '/events'}"
-                class="btn btn-primary w-100 mt-2">Book Now</a>
+                [routerLink]="['/bookings/create', ev.id]"
+                [queryParams]="{ from: '/events' }"
+                class="btn btn-primary w-100 mt-2"
+                >Book Now</a
+              >
             } @else if (ev.availableSeats === 0) {
               <span class="text-danger fw-bold">Sold Out</span>
             } @else {
-              <a
-                [routerLink]="['/events',ev.id]"
-                class="btn btn-primary">Details
-              </a>
+              <a [routerLink]="['/events', ev.id]" class="btn btn-primary">Details </a>
             }
 
             @if (ev.canEditDelete) {
               <div class="mt-2">
-                <a [routerLink]="['/events/edit',ev.id]"
-                   class="btn btn-sm btn-outline-secondary me-1">Edit</a>
+                <a
+                  [routerLink]="['/events/edit', ev.id]"
+                  class="btn btn-sm btn-outline-secondary me-1"
+                  >Edit</a
+                >
 
-                <button class="btn btn-sm btn-outline-danger"
-                          type="button"
-                        (click)="deleteEvent(ev.id)">
-                    Delete
-                  </button>
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  type="button"
+                  (click)="deleteEvent(ev.id)"
+                >
+                  Delete
+                </button>
               </div>
             }
           </div>
@@ -102,6 +121,4 @@
   }
 </div>
 
-<footer>
-  &copy; 2026 EventBookingPlatform
-</footer>
+<footer>&copy; 2026 EventBookingPlatform</footer>

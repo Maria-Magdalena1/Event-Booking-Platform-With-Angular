@@ -8,7 +8,6 @@ import { Location } from '@angular/common';
   templateUrl: './admin.html',
   styleUrl: './admin.css',
 })
-
 export class Admin {
   constructor(private location: Location) {}
 

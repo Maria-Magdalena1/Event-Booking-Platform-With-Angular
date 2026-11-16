@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #3b9845;">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #3b9845">
   <div class="container">
     <a class="navbar-brand" href="/">EventBooking</a>
     <div class="collapse navbar-collapse">
@@ -17,19 +17,30 @@
     <form (ngSubmit)="login()">
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
-        <input name="username" class="form-control" id="username" placeholder="Enter username"
-               [(formField)]="username"
-               required>
+        <input
+          name="username"
+          class="form-control"
+          id="username"
+          placeholder="Enter username"
+          [(formField)]="username"
+          required
+        />
       </div>
 
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <input name="password" type="password" class="form-control" id="password" placeholder="Enter password"
-               [(formField)]="password" required>
+        <input
+          name="password"
+          type="password"
+          class="form-control"
+          id="password"
+          placeholder="Enter password"
+          [(formField)]="password"
+          required
+        />
       </div>
 
       @if (errorMessage) {
-
         <div class="text-danger mb-3">
           {{ errorMessage }}
         </div>
@@ -42,6 +53,4 @@
   </div>
 </div>
 
-<footer class="footer">
-  &copy; 2026 EventBookingPlatform
-</footer>
+<footer class="footer">&copy; 2026 EventBookingPlatform</footer>

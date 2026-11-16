@@ -1,14 +1,11 @@
 import { Component } from '@angular/core';
-import {RouterLink} from '@angular/router';
-import {FormsModule} from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-form',
   standalone: true,
-  imports: [
-    RouterLink,
-    FormsModule
-  ],
+  imports: [RouterLink, FormsModule],
   templateUrl: './form.html',
   styleUrl: '../../../shared/event-form.css',
 })

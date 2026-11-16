@@ -14,16 +14,20 @@
        <input type="hidden" name="_method" value="put"/>
        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
        -->
-       <div class="mb-3">
-         <label for="seatsBooked" class="form-label">Number of Seats</label>
-         <input id="seatsBooked" type="number"
-                class="form-control" min="1"
-                [max]="event.availableSeats"
-                [(ngModel)]="seatsBooked"
-                placeholder="Enter number of seats" required>
+        <div class="mb-3">
+          <label for="seatsBooked" class="form-label">Number of Seats</label>
+          <input
+            id="seatsBooked"
+            type="number"
+            class="form-control"
+            min="1"
+            [max]="event.availableSeats"
+            [(ngModel)]="seatsBooked"
+            placeholder="Enter number of seats"
+            required
+          />
 
-
-         <!--  <div class="text-danger" th:if="${#fields.hasErrors('seatsBooked')}"
+          <!--  <div class="text-danger" th:if="${#fields.hasErrors('seatsBooked')}"
              th:errors="*{seatsBooked}"></div>
         <div class="text-danger" th:if="${seatError}" th:text="${seatError}"></div>-->
           @if (seatsError) {
@@ -37,7 +41,9 @@
               {{ seatError }}
             </div>
           }
-          <small class="form-text text-muted">Available seats: <span>{{ event.availableSeats }}</span></small>
+          <small class="form-text text-muted"
+            >Available seats: <span>{{ event.availableSeats }}</span></small
+          >
         </div>
 
         <div class="text-center mt-4">

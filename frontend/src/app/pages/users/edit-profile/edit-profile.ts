@@ -1,13 +1,10 @@
 import { Component } from '@angular/core';
-import {RouterLink} from '@angular/router';
-import {FormsModule} from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-profile',
-  imports: [
-    RouterLink,
-    FormsModule
-  ],
+  imports: [RouterLink, FormsModule],
   templateUrl: './edit-profile.html',
   styleUrl: './edit-profile.css',
 })
