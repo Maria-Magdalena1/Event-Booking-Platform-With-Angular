@@ -59,13 +59,13 @@
               <div class="table-responsive">
                 <table class="table table-striped">
                   <thead>
-                    <tr>
-                      <th>Username</th>
-                      <th>Email</th>
-                      <th>Role</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
+                  <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
                   </thead>
                   <tbody>
                     @for (u of allUsers; track u.id) {
@@ -178,8 +178,10 @@
       >
         <div class="accordion-body">
           @if (bookings.length > 0) {
+
             <div class="row row-cols-1 row-cols-md-2 g-4">
               @for (booking of bookings; track booking.id) {
+
                 <div class="col">
                   <div class="card h-100 shadow-sm">
                     <div class="card-body">
