@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { form, FormField, FormRoot, required,minLength,maxLength } from '@angular/forms/signals';
+import { form, FormField, FormRoot, required, minLength, maxLength } from '@angular/forms/signals';
 import { RegisterRequest } from '../../models/register-request';
 import { AuthService } from '../../services/auth.service';
 import { firstValueFrom } from 'rxjs';
@@ -28,38 +28,40 @@ export class Register {
     private router: Router,
   ) {}
 
-  registerForm = form(this.registerRequest,
-    (path)=>{
-    required(path.username);
-    minLength(path.username,5);
-    maxLength(path.username,30);
+  registerForm = form(
+    this.registerRequest,
+    (path) => {
+      required(path.username);
+      minLength(path.username, 5);
+      maxLength(path.username, 30);
 
-    required(path.email);
-    required(path.password);
-    minLength(path.password,8);
+      required(path.email);
+      required(path.password);
+      minLength(path.password, 8);
 
-    required(path.confirmPassword);
+      required(path.confirmPassword);
     },
     {
-    submission: {
-      action: async () => {
-        this.errorMessage.set('');
-        this.registrationSuccessful.set('');
+      submission: {
+        action: async () => {
+          this.errorMessage.set('');
+          this.registrationSuccessful.set('');
 
-        if (this.registerRequest().password !== this.registerRequest().confirmPassword) {
-          this.errorMessage.set('Passwords do not match');
-          return;
-        }
-        try {
-          await firstValueFrom(this.authService.register(this.registerRequest()));
+          if (this.registerRequest().password !== this.registerRequest().confirmPassword) {
+            this.errorMessage.set('Passwords do not match');
+            return;
+          }
+          try {
+            await firstValueFrom(this.authService.register(this.registerRequest()));
 
-          this.registrationSuccessful.set('Registration successful');
+            this.registrationSuccessful.set('Registration successful');
 
-          await this.router.navigate(['/login']);
-        } catch (error: any) {
-          this.errorMessage.set(error.error?.message || 'Registration failed. Please try again.');
-        }
+            await this.router.navigate(['/login']);
+          } catch (error: any) {
+            this.errorMessage.set(error.error?.message || 'Registration failed. Please try again.');
+          }
+        },
       },
     },
-  });
+  );
 }

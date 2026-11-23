@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { form, FormField, FormRoot,required} from '@angular/forms/signals';
 import { AuthService } from '../../services/auth.service';
 import { LoginRequest } from '../../models/login-request';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -21,8 +22,9 @@ export class Login {
 
   constructor(
     private authService: AuthService,
-    private router: Router,
-  ) {}
+    private router: Router
+  ) {
+  }
 
   loginForm = form(
     this.loginRequest,
@@ -40,7 +42,7 @@ export class Login {
               console.log('Login successful!', response);
               void this.router.navigate(['/events']);
             },
-            error: (error) => {
+            error: (error:HttpErrorResponse) => {
               this.errorMessage.set(
                 error.error?.message || 'Invalid username or password'
               );

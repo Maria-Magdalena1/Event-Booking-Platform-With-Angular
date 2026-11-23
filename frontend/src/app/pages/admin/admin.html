@@ -5,26 +5,26 @@
     <div class="col-md-3">
       <div class="card shadow-sm p-4 text-center">
         <h5>Total Users</h5>
-        <h2>{{ totalUsers }}</h2>
+        <h2>{{ totalUsers() }}</h2>
       </div>
     </div>
     <div class="col-md-3">
       <div class="card shadow-sm p-4 text-center">
         <h5>Total Events</h5>
-        <h2>{{ totalEvents }}</h2>
+        <h2>{{ totalEvents() }}</h2>
       </div>
     </div>
     <div class="col-md-3">
       <div class="card shadow-sm p-4 text-center">
         <h5>Total Bookings</h5>
-        <h2>{{ totalBookings }}</h2>
+        <h2>{{ totalBookings() }}</h2>
       </div>
     </div>
 
     <div class="col-md-3">
       <div class="card shadow-sm p-4 text-center">
         <h5>Total Revenue</h5>
-        <h2>{{ totalRevenue | number: '1.2-2' }} лв</h2>
+        <h2>{{ totalRevenue() | number:'1.2-2' }} лв</h2>
       </div>
     </div>
   </div>
@@ -34,18 +34,18 @@
     <div class="table-responsive">
       <table class="table table-hover align-middle">
         <thead>
-          <tr>
-            <th>Event</th>
-            <th>Bookings</th>
-          </tr>
+        <tr>
+          <th>Event</th>
+          <th>Bookings</th>
+        </tr>
         </thead>
         <tbody>
-          @if (topEvents.length === 0) {
+          @if (topEvents().length === 0) {
             <tr>
               <td colspan="2" class="text-center">No top events</td>
             </tr>
           } @else {
-            @for (row of topEvents; track row.name) {
+            @for (row of topEvents(); track row.name) {
               <tr>
                 <td>{{ row.name }}</td>
 
@@ -53,8 +53,8 @@
                   <span
                     [class.badge-high]="row.totalSeatsBooked > 15"
                     [class.badge-medium]="row.totalSeatsBooked > 7 && row.totalSeatsBooked <= 15"
-                    [class.badge-low]="row.totalSeatsBooked <= 7"
-                  >
+                    [class.badge-low]="row.totalSeatsBooked <= 7">
+
                     {{ row.totalSeatsBooked }}
                   </span>
                 </td>
@@ -77,12 +77,12 @@
           </tr>
         </thead>
         <tbody>
-          @if (seatWarnings.length === 0) {
+          @if (seatWarnings().length === 0) {
             <tr>
               <td colspan="2" class="text-center">No events at risk</td>
             </tr>
           } @else {
-            @for (row of seatWarnings; track row.eventName) {
+            @for (row of seatWarnings(); track row.eventName) {
               <tr>
                 <td>{{ row.eventName }}</td>
                 <td>{{ row.freeSeats }}</td>
