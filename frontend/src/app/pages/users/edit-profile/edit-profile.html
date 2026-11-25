@@ -2,30 +2,66 @@
   <div class="profile-card">
     <h2>Edit Profile</h2>
 
-    <form (ngSubmit)="updateProfile()">
-      <!--
-    <form th:action="@{|/user/profile/edit|}" th:object="${user}" method="post">
-      <input type="hidden" name="_method" value="put"/>
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-      <input type="hidden" th:field="*{id}"/>
-      <input type="hidden" th:field="*{email}"/>
--->
+    @if (user()) {
+      <form [formRoot]="profileForm">
 
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username"
-      [(ngModel)]="user.username" required
-      >
+        <label for="username">Username:</label>
+        <input type="text"
+               id="username"
+               [formField]="profileForm.username"
+        />
 
-      <label for="firstName">Name:</label>
-      <input type="text" id="firstName" name="name" [(ngModel)]="user.name" placeholder="Enter your name">
+        @if (profileForm.username().invalid() &&
+        profileForm.username().touched()) {
+          <p class="text-danger">Username is required.</p>
+        }
 
-      <label for="age">Age:</label>
-      <input type="number" id="age" name="age" [(ngModel)]="user.age" min="0" placeholder="Enter your age">
-      <div>
-        <button type="submit" class="btn">Save Changes</button>
-      </div>
-    </form>
-    <div style="margin-top: 15px; text-align: center;">
+        <label for="firstName">Name:</label>
+        <input
+          type="text"
+          id="firstName"
+          [formField]="profileForm.name"
+          placeholder="Enter your name"
+        />
+
+        <label for="age">Age:</label>
+        <input
+          type="number"
+          id="age"
+          [formField]="profileForm.age"
+          placeholder="Enter your age"
+        />
+
+        @if (profileForm.age().invalid() &&
+        profileForm.age().touched()) {
+          <p class="text-danger">
+            Age must be greater than or equal to 0.
+          </p>
+        }
+
+        @if (errorMessage()) {
+          <p class="text-danger">{{ errorMessage() }}</p>
+        }
+
+        <div>
+          <button
+            type="submit"
+            class="btn"
+            [disabled]="profileForm().submitting()">
+
+            @if (profileForm().submitting()) {
+              Saving...
+            } @else {
+              Save Changes
+            }
+
+          </button>
+        </div>
+      </form>
+    } @else {
+      <p>Loading profile...</p>
+    }
+    <div style="margin-top: 15px; text-align: center">
       <a routerLink="/user/profile" class="btn btn-secondary">Back to Profile</a>
     </div>
   </div>

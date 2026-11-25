@@ -1,23 +1,35 @@
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh">
   <div class="card">
-    <h2 class="card-title text-center mb-4">Booking Summary</h2>
+    @if (booking(); as currentBooking) {
+      <h2 class="card-title text-center mb-4">Booking Summary</h2>
 
-    <p class="text-center">
-      You booked <strong>{{ booking.seatsBooked }}</strong> seats for
-      <strong>{{ booking.event.name }}</strong>.
-    </p>
-    <p class="text-center text-muted">Status: <span>{{ booking.status.displayName }}</span></p>
+      <p class="text-center">
+        You booked <strong>{{ currentBooking.seatsBooked }}</strong> seats for
+        <strong>{{ currentBooking.event.name }}</strong
+        >.
+      </p>
+      <p class="text-center text-muted">
+        Status: <span>{{ currentBooking.status.displayName }}</span>
+      </p>
 
-    @if (booking.status.name === 'PENDING') {
+      @if (currentBooking.status.name === 'PENDING') {
+        <div class="d-flex justify-content-center gap-3 mt-4">
+          <button type="button" class="btn btn-success" (click)="confirmBooking()">
+            Confirm Booking
+          </button>
 
-    <div class="d-flex justify-content-center gap-3 mt-4">
-
-      <!-- type="submit"-->
-      <button type="button" class="btn btn-success" (click)="confirmBooking()">Confirm Booking</button>
-
-      <button type="button" class="btn btn-outline-secondary" (click)="cancelBooking()">Cancel Booking</button>
-
-    </div>
+          <button type="button" class="btn btn-outline-secondary" (click)="cancelBooking()">
+            Cancel Booking
+          </button>
+        </div>
+      }
+      @if (errorMessage()) {
+        <div class="alert alert-danger mt-3">
+          {{ errorMessage() }}
+        </div>
+      }
+    } @else {
+      <p class="text-center">Loading booking...</p>
     }
     <div class="text-center mt-4">
       <a routerLink="/events" class="btn btn-home">Back to Events</a>

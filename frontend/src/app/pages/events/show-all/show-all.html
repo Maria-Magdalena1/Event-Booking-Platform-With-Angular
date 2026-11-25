@@ -1,47 +1,60 @@
-<div class="top-bar" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
-  <nav class="navbar navbar-expand-lg peachy-navbar">
-    <div class="container-fluid">
-      <a class="navbar-brand" routerLink="/">Event Booking</a>
+<nav class="navbar navbar-expand-lg peachy-navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/">CreatedEventsProfile Booking</a>
 
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" routerLink="/home">Home</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/events">Events</a></li>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" routerLink="/home">Home</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/events">Events</a></li>
 
-          @if (isAuthenticated) {
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/user/profile">Profile</a>
-            </li>
-          }
-        </ul>
+        @if (isAuthenticated()) {
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/user/profile">Profile</a>
+          </li>
+        }
+      </ul>
 
-        <a routerLink="/events/add-event" class="add-btn">+ Add Event</a>
-      </div>
+      <a routerLink="/events/add-event" class="add-btn">+ Add CreatedEventsProfile</a>
     </div>
-  </nav>
-</div>
+  </div>
+</nav>
 
-@if (successMessage) {
+@if (successMessage()) {
   <div class="container mt-3">
     <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
-      {{ successMessage }}
-      <button type="button" class="btn-close"
-              (click)="successMessage = ''"
-              aria-label="Close"></button>
+      {{ successMessage() }}
+      <button
+        type="button"
+        class="btn-close"
+        (click)="successMessage.set('')"
+        aria-label="Close"
+      ></button>
     </div>
   </div>
 }
 
-@if (errorMessage) {
+@if (errorMessage()) {
   <div class="container mt-3">
     <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
-      {{ errorMessage }}
-      <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Close"></button>
+      {{ errorMessage() }}
+      <button
+        type="button"
+        class="btn-close"
+        (click)="errorMessage.set('')"
+        aria-label="Close"
+      ></button>
     </div>
   </div>
 }
@@ -49,13 +62,9 @@
 <div class="container">
   <h2 class="fw-bold text-center mb-5">🎉 Upcoming Events</h2>
 
-  @if (events.length > 0) {
-
+  @if (events().length > 0) {
     <div class="row">
-
-      @for (ev of events; track ev.id) {
-
-      }
+      @for (ev of events(); track ev.id) {
       <div class="col-md-4 mb-4">
         <div class="card event-card h-90">
           <div class="card-body">
@@ -66,33 +75,38 @@
 
             @if (ev.canBook) {
               <a
-                [routerLink]="['/bookings/create',ev.id]"
-                [queryParams]="{from: '/events'}"
-                class="btn btn-primary w-100 mt-2">Book Now</a>
+                [routerLink]="['/bookings/create', ev.id]"
+                [queryParams]="{ from: '/events' }"
+                class="btn btn-primary w-100 mt-2"
+              >Book Now</a
+              >
             } @else if (ev.availableSeats === 0) {
               <span class="text-danger fw-bold">Sold Out</span>
             } @else {
-              <a
-                [routerLink]="['/events',ev.id]"
-                class="btn btn-primary">Details
-              </a>
+              <a [routerLink]="['/events', ev.id]" class="btn btn-primary">Details </a>
             }
 
             @if (ev.canEditDelete) {
               <div class="mt-2">
-                <a [routerLink]="['/events/edit',ev.id]"
-                   class="btn btn-sm btn-outline-secondary me-1">Edit</a>
+                <a
+                  [routerLink]="['/events/edit', ev.id]"
+                  class="btn btn-sm btn-outline-secondary me-1"
+                >Edit</a
+                >
 
-                <button class="btn btn-sm btn-outline-danger"
-                          type="button"
-                        (click)="deleteEvent(ev.id)">
-                    Delete
-                  </button>
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  type="button"
+                  (click)="deleteEvent(ev.id)"
+                >
+                  Delete
+                </button>
               </div>
             }
           </div>
         </div>
       </div>
+      }
     </div>
   } @else {
     <div class="text-center mt-5">
@@ -102,6 +116,4 @@
   }
 </div>
 
-<footer>
-  &copy; 2026 EventBookingPlatform
-</footer>
+<footer>&copy; 2026 EventBookingPlatform</footer>
