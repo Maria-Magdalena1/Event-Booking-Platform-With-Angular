@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 
-import { User } from '../../../models/profile/user';
-import { Event } from '../../../models/profile/event';
-import { Booking } from '../../../models/profile/booking';
+import { User } from '../../../models/user/user';
+import { CreatedEventsProfile } from '../../../models/event/created-events-profile';
 
 import { UserService } from '../../../services/user.service';
 import { EventService } from '../../../services/event.service';
 import { BookingService } from '../../../services/booking.service';
 import { AuthService } from '../../../services/auth.service';
+import { ProfileBooking } from '../../../models/profile-booking';
 
 @Component({
   selector: 'app-profile',
@@ -18,16 +18,18 @@ import { AuthService } from '../../../services/auth.service';
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
-
 export class Profile implements OnInit {
-  user!: User;
-  isAdmin = false;
+  user = signal<User | null>(null);
 
-  allUsers: User[] = [];
-  createdEvents: Event[] = [];
-  bookings: Booking[] = [];
+  isAdmin = signal(false);
 
-  errorMessage = '';
+  allUsers = signal<User[]>([]);
+
+  createdEvents = signal<CreatedEventsProfile[]>([]);
+
+  bookings = signal<ProfileBooking[]>([]);
+
+  errorMessage = signal('');
 
   constructor(
     private userService: UserService,
@@ -40,21 +42,22 @@ export class Profile implements OnInit {
     this.loadProfile();
   }
 
+  // /analytics/dashboard
   loadProfile(): void {
     this.userService.getProfile().subscribe({
       next: (user) => {
-        this.user = user;
-        this.isAdmin = user.role === 'ADMIN';
+        this.user.set(user);
+        this.isAdmin.set(user.role === 'ADMIN');
 
         this.loadCreatedEvents();
         this.loadBookings();
 
-        if (this.isAdmin) {
+        if (this.isAdmin()) {
           this.loadAllUsers();
         }
       },
       error: (error) => {
-        this.errorMessage = 'Could not load profile.';
+        this.errorMessage.set('Could not load profile.');
         console.error(error);
       },
     });
@@ -63,7 +66,7 @@ export class Profile implements OnInit {
   loadCreatedEvents(): void {
     this.eventService.getMyCreatedEvents().subscribe({
       next: (events) => {
-        this.createdEvents = events;
+        this.createdEvents.set(events);
       },
       error: (error) => {
         console.error('Could not load created events.', error);
@@ -73,7 +76,7 @@ export class Profile implements OnInit {
   loadBookings(): void {
     this.bookingService.getMyBookings().subscribe({
       next: (bookings) => {
-        this.bookings = bookings;
+        this.bookings.set(bookings);
       },
       error: (error) => {
         console.error('Could not load bookings.', error);
@@ -84,7 +87,8 @@ export class Profile implements OnInit {
   loadAllUsers(): void {
     this.userService.getAllUsers().subscribe({
       next: (users) => {
-        this.allUsers = users.filter((user) => user.id !== this.user.id);
+        this.allUsers.set(
+          users.filter((user) => user.id !== this.user()?.id));
       },
       error: (error) => {
         console.error('Could not load users.', error);
@@ -106,6 +110,7 @@ export class Profile implements OnInit {
   logout(): void {
     this.authService.logout().subscribe({
       next: () => {
+        //  /
         this.router.navigate(['/login']);
       },
       error: (error) => {

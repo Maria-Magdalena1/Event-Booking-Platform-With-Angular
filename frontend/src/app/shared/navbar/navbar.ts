@@ -25,6 +25,8 @@ export class Navbar implements OnInit {
     this.authService.logout().subscribe({
       next:()=>{
         this.isAuthenticated=false;
+
+        //da sochi kum / samo
         this.router.navigate(['/login']);
       },error:(error)=>{
         console.error('Logout failed.',error);

@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { form, FormField, FormRoot,required} from '@angular/forms/signals';
 import { AuthService } from '../../services/auth.service';
-import { LoginRequest } from '../../models/login-request';
+import { LoginRequest } from '../../models/user/login-request';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({

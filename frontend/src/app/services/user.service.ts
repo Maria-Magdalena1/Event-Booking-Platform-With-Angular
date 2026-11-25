@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { EditProfileUser } from '../models/user/edit-profile-user';
 
-import { User } from '../models/profile/user';
+import { User } from '../models/user/user';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,13 @@ export class UserService {
 
   getAllUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.apiUrl}/all`);
+  }
+
+  updateProfile(user: EditProfileUser): Observable<User> {
+    return this.http.put<User>(
+      `${this.apiUrl}/user/profile/edit`,
+      user
+    );
   }
 
   toggleBlockUser(userId: string): Observable<void> {

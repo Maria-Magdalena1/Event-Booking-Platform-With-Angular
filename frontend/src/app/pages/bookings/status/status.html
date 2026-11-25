@@ -1,38 +1,42 @@
 <div class="status-wrapper d-flex justify-content-center align-items-center">
   <div class="status-card">
-    <h2 class="card-title text-center">{{ message }}</h2>
+    <h2 class="card-title text-center">{{ message() }}</h2>
 
-    @if (booking) {
+    @if (booking(); as currentBooking) {
       <div class="booking-info mt-3">
         <p>
-          <strong>Event:</strong> <span>{{ booking.event.name }}</span>
+          <strong>CreatedEventsProfile:</strong> <span>{{ currentBooking.event.name }}</span>
         </p>
         <p>
-          <strong>Seats Booked:</strong> <span>{{ booking.seatsBooked }}</span>
+          <strong>Seats Booked:</strong> <span>{{ currentBooking.seatsBooked }}</span>
         </p>
         <p>
-          <strong>Status:</strong> <span>{{ booking.status.displayName }}</span>
+          <strong>Status:</strong> <span>{{ currentBooking.status.displayName }}</span>
         </p>
       </div>
-    }
-    <a [href]="googleCalendarLink" target="_blank" rel="noopener noreferrer">
-      Add to Google Calendar
-    </a>
+      <a [href]="googleCalendarLink()" target="_blank" rel="noopener noreferrer">
+        Add to Google Calendar
+      </a>
 
-    @if (pdfFileName) {
-      <div>
-        <a [href]="'http://localhost:8080/bookings/download/' + pdfFileName" target="_blank">
-          Download your booking PDF
-        </a>
-      </div>
-    }
-    <img [src]="'data:image/png;base64,' + booking.qrCodeBase64" alt="QR Code" />
-    <a
-      [href]="'http://localhost:8080/api/user/bookings/download/' + booking.id"
-      download="booking.png"
-      >Свали QR кода</a
-    >
+      @if (pdfFileName()) {
+        <div>
+          <a [href]="'http://localhost:8080/bookings/download/' + pdfFileName" target="_blank">
+            Download your booking PDF
+          </a>
+        </div>
+      }
 
+      @if (currentBooking.qrCodeBase64) {
+        <img
+          [src]="'data:image/png;base64,' + currentBooking.qrCodeBase64"
+          alt="QR Code"
+        />
+        <a
+          [href]="'http://localhost:8080/api/user/bookings/download/' + currentBooking.id"
+          download="booking.png"
+        >Свали QR кода</a>
+      }
+    }
     <a routerLink="/events" class="btn btn-home mt-4">Back to Events</a>
   </div>
 </div>

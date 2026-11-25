@@ -3,7 +3,7 @@
     <h2>Edit Profile</h2>
 
     @if (user()) {
-      <form (submit)="$event.preventDefault(); updateProfile()">
+      <form [formRoot]="profileForm">
 
         <label for="username">Username:</label>
         <input type="text"
@@ -32,15 +32,29 @@
           placeholder="Enter your age"
         />
 
+        @if (profileForm.age().invalid() &&
+        profileForm.age().touched()) {
+          <p class="text-danger">
+            Age must be greater than or equal to 0.
+          </p>
+        }
+
         @if (errorMessage()) {
           <p class="text-danger">{{ errorMessage() }}</p>
         }
 
         <div>
-          <button type="submit"
-                  class="btn"
-                  [disabled]="profileForm().invalid()">
-            Save Changes
+          <button
+            type="submit"
+            class="btn"
+            [disabled]="profileForm().submitting()">
+
+            @if (profileForm().submitting()) {
+              Saving...
+            } @else {
+              Save Changes
+            }
+
           </button>
         </div>
       </form>

@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { form, FormField, FormRoot, required, minLength, maxLength } from '@angular/forms/signals';
-import { RegisterRequest } from '../../models/register-request';
+import { RegisterRequest } from '../../models/user/register-request';
 import { AuthService } from '../../services/auth.service';
 import { firstValueFrom } from 'rxjs';
 

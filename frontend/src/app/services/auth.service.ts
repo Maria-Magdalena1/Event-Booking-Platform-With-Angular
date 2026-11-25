@@ -1,8 +1,8 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { RegisterRequest } from '../models/register-request';
-import { LoginRequest } from '../models/login-request';
+import { RegisterRequest } from '../models/user/register-request';
+import { LoginRequest } from '../models/user/login-request';
 
 @Injectable({
   providedIn: 'root',

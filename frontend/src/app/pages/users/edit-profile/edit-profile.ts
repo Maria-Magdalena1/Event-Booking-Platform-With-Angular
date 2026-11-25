@@ -1,13 +1,16 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { form, FormField, required,min } from '@angular/forms/signals';
-import { EditProfileUser } from '../../../models/edit-profile-user';
+import { form, FormField, FormRoot, required, min } from '@angular/forms/signals';
+import { firstValueFrom } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+
+import { EditProfileUser } from '../../../models/user/edit-profile-user';
 import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-edit-profile',
   standalone: true,
-  imports: [RouterLink, FormField, FormField],
+  imports: [RouterLink, FormField, FormRoot],
   templateUrl: './edit-profile.html',
   styleUrl: './edit-profile.css',
 })
@@ -20,12 +23,63 @@ export class EditProfile implements OnInit {
     age: 0,
   });
 
-  profileForm = form(this.profileModel, (fields) => {
-    required(fields.username);
-    min(fields.age,0);
-  });
-
   errorMessage = signal('');
+
+  profileForm = form(
+    this.profileModel,
+    (path) => {
+      required(path.username);
+      min(path.age, 0);
+    },
+    {
+      submission: {
+        action: async (field) => {
+          this.errorMessage.set('');
+
+          const currentUser = this.user();
+
+          if (!currentUser) {
+            this.errorMessage.set('User profile is not available.');
+
+            return {
+              kind: 'serverError',
+              message: 'Could not update profile.',
+            };
+          }
+
+          const updatedUser: EditProfileUser = {
+            id: currentUser.id,
+            email: currentUser.email,
+            username: field().value().username,
+            name: field().value().name,
+            age: field().value().age,
+          };
+
+          try {
+            await firstValueFrom(this.userService.updateProfile(updatedUser));
+
+            await this.router.navigate(['/user/profile']);
+
+            return undefined;
+          } catch (error) {
+            console.error('Error updating profile:', error);
+
+            const message =
+              error instanceof HttpErrorResponse
+                ? error.error?.message || 'Could not update profile.'
+                : 'Could not update profile.';
+
+            this.errorMessage.set(message);
+
+            return {
+              kind: 'serverError',
+              message,
+            };
+          }
+        },
+      },
+    },
+  );
 
   constructor(
     private userService: UserService,
@@ -58,41 +112,6 @@ export class EditProfile implements OnInit {
         this.errorMessage.set('Could not load profile');
         console.error(error);
       },
-    });
-  }
-
-  updateProfile(): void {
-    if (!this.profileForm().valid()) {
-      return;
-    }
-
-    const currentUser = this.user();
-
-    if (!currentUser) {
-      return;
-    }
-
-    const updatedUser: EditProfileUser = {
-      id:currentUser.id,
-      email:currentUser.id,
-      username:this.profileModel().username,
-      name:this.profileModel().name,
-      age:this.profileModel().age
-    };
-
-    this.userService.updateProfile(updatedUser).subscribe({
-      next: () => {
-        void this.router.navigate(['/user/profile']);
-      },
-      error: (error) => {
-        console.error('Error updating profile:', error);
-
-        this.errorMessage.set('Could not update profile.');
-
-        if (error.error?.errors) {
-          console.error('Validation errors:', error.error.errors);
-        }
-      }
     });
   }
 }

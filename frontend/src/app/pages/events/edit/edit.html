@@ -1,27 +1,19 @@
 <div class="form-container">
-  @if (event) {
+  @if (event()) {
     <h3 class="text-center mb-4 fw-bold">✏️ Edit Event</h3>
 
-    <!--   <form th:action="@{|/events/${event.id}/event-edit|}" th:object="${event}" method="post">
-     <input type="hidden" name="_method" value="put"/>
-      <input type="hidden" th:field="*{id}"/>
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-
-   -->
-    <form (ngSubmit)="updateEvent()">
+    <form [formRoot]="eventForm">
       <div class="mb-3">
-        <label for="name" class="form-label">Event Name</label>
+        <label for="name" class="form-label">CreatedEventsProfile Name</label>
         <input
           id="name"
           type="text"
-          name="name"
-          [(ngModel)]="event.name"
           class="form-control"
-          required
+          [formField]="eventForm.name"
         />
 
-        @if (errors['name']) {
-          <div class="text-danger">{{ errors['name'] }}</div>
+        @if (eventForm.name().invalid() && eventForm.name().touched()) {
+          <div class="text-danger">Event name is required.</div>
         }
       </div>
 
@@ -29,15 +21,15 @@
         <label for="description" class="form-label">Description</label>
         <textarea
           id="description"
-          name="description"
-          [(ngModel)]="event.description"
           class="form-control"
+          [formField]="eventForm.description"
         >
         </textarea>
 
-        @if (errors['description']) {
-          <div class="text-danger">{{ errors['description'] }}</div>
+        @if (errors()['description']) {
+          <div class="text-danger">{{ errors()['description'] }}</div>
         }
+
       </div>
 
       <div class="mb-3">
@@ -45,48 +37,41 @@
         <input
           id="venue"
           type="text"
-          name="venue"
-          [(ngModel)]="event.venue"
+          [formField]="eventForm.venue"
           class="form-control"
-          required
         />
 
-        @if (errors['venue']) {
-          <div class="text-danger">{{ errors['venue'] }}</div>
+        @if (errors()['venue']) {
+          <div class="text-danger">{{ errors()['venue'] }}</div>
         }
-      </div>
 
+      </div>
       <div class="mb-3">
         <label for="location" class="form-label">Location</label>
         <input
           id="location"
           type="text"
-          name="location"
-          [(ngModel)]="event.location"
+          [formField]="eventForm.location"
           class="form-control"
-          required
         />
 
-        @if (errors['location']) {
-          <div class="text-danger">{{ errors['location'] }}</div>
+        @if (errors()['location']) {
+          <div class="text-danger">{{ errors()['location'] }}</div>
         }
-      </div>
 
+      </div>
       <div class="mb-3">
         <label for="price" class="form-label">Price</label>
         <input
           id="price"
           type="number"
-          name="price"
-          [(ngModel)]="event.price"
-          class="form-control"
           step="0.01"
-          min="0"
-          required
+          class="form-control"
+          [formField]="eventForm.price"
         />
 
-        @if (errors['price']) {
-          <div class="text-danger">{{ errors['price'] }}</div>
+        @if (errors()['price']) {
+          <div class="text-danger">{{ errors()['price'] }}</div>
         }
       </div>
 
@@ -95,14 +80,12 @@
         <input
           id="startDate"
           type="datetime-local"
-          name="startDate"
-          [(ngModel)]="event.startDate"
           class="form-control"
-          required
+          [formField]="eventForm.startDate"
         />
 
-        @if (errors['startDate']) {
-          <div class="text-danger">{{ errors['startDate'] }}</div>
+        @if (errors()['startDate']) {
+          <div class="text-danger">{{ errors()['startDate'] }}</div>
         }
       </div>
 
@@ -111,20 +94,30 @@
         <input
           id="endDate"
           type="datetime-local"
-          name="endDate"
-          [(ngModel)]="event.endDate"
           class="form-control"
-          required
+          [formField]="eventForm.endDate"
         />
 
-        @if (errors['endDate']) {
-          <div class="text-danger">{{ errors['endDate'] }}</div>
+        @if (errors()['endDate']) {
+          <div class="text-danger">{{ errors()['endDate'] }}</div>
         }
       </div>
 
+      @if (errorMessage()) {
+        <div class="alert alert-danger">
+          {{ errorMessage() }}
+        </div>
+      }
+
       <div class="d-flex justify-content-between">
         <a routerLink="/events" class="btn btn-outline-secondary">&lArr; Back</a>
-        <button type="submit" class="btn btn-primary">Update</button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="eventForm().submitting()"
+        >
+          {{ eventForm().submitting() ? 'Updating...' : 'Update' }}
+        </button>
       </div>
     </form>
   } @else {

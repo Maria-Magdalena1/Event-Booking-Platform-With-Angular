@@ -1,106 +1,126 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit, signal } from '@angular/core';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { form, FormField, FormRoot, required, min } from '@angular/forms/signals';
+import { firstValueFrom } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+
+import { EditEvent } from '../../../models/event/edit-event';
+import { EventService } from '../../../services/event.service';
 
 @Component({
   selector: 'app-edit',
-  imports: [FormsModule, RouterLink],
+  standalone: true,
+  imports: [RouterLink, FormField, FormRoot],
   templateUrl: './edit.html',
   styleUrl: './edit.css',
 })
-export class Edit {
-  protected readonly event = event;
-}
+export class Edit implements OnInit {
+  event = signal<EditEvent | null>(null);
 
-//import { Component, OnInit } from '@angular/core';
-// import { FormsModule } from '@angular/forms';
-// import { HttpClient } from '@angular/common/http';
-// import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-//
-// interface Event {
-//   id: number;
-//   name: string;
-//   description: string;
-//   venue: string;
-//   location: string;
-//   price: number;
-//   startDate: string;
-//   endDate: string;
-// }
-//
-// @Component({
-//   selector: 'app-edit-event',
-//   standalone: true,
-//   imports: [FormsModule, RouterLink],
-//   templateUrl: './edit-event.html',
-//   styleUrl: './edit-event.css'
-// })
-// export class EditEventComponent implements OnInit {
-//
-//   event: Event | null = null;
-//
-//   errors: { [key: string]: string } = {};
-//
-//   constructor(
-//     private http: HttpClient,
-//     private route: ActivatedRoute,
-//     private router: Router
-//   ) {}
-//
-//   ngOnInit(): void {
-//     const id = this.route.snapshot.paramMap.get('id');
-//
-//     if (id) {
-//       this.loadEvent(Number(id));
-//     }
-//   }
-//
-//   // Load event
-//   loadEvent(id: number): void {
-//
-//     this.http.get<Event>(
-//       `http://localhost:8080/api/events/${id}`
-//     ).subscribe({
-//
-//       next: (data) => {
-//         this.event = {
-//           ...data,
-//           startDate: data.startDate.substring(0, 16),
-//           endDate: data.endDate.substring(0, 16)
-//         };
-//       },
-//
-//       error: (error) => {
-//         console.error('Error loading event:', error);
-//       }
-//     });
-//   }
-//
-//   // Update event
-//   updateEvent(): void {
-//
-//     if (!this.event) {
-//       return;
-//     }
-//
-//     this.errors = {};
-//
-//     this.http.put(
-//       `http://localhost:8080/events/${this.event.id}/event-edit`,
-//       this.event
-//     ).subscribe({
-//
-//       next: () => {
-//         this.router.navigate(['/events']);
-//       },
-//
-//       error: (error) => {
-//         console.error('Error updating event:', error);
-//
-//         if (error.error?.errors) {
-//           this.errors = error.error.errors;
-//         }
-//       }
-//     });
-//   }
-// }
+  errorMessage = signal('');
+  errors = signal<Record<string, string>>({});
+
+  eventRequest = signal<EditEvent>({
+    name: '',
+    description: '',
+    venue: '',
+    location: '',
+    price: 0,
+    startDate: '',
+    endDate: '',
+  });
+
+  private eventId = '';
+
+  eventForm = form(
+    this.eventRequest,
+    (path) => {
+      required(path.name);
+      required(path.description);
+      required(path.venue);
+      required(path.location);
+      required(path.startDate);
+      required(path.endDate);
+
+      min(path.price, 0);
+    },
+    {
+      submission: {
+        action: async (field) => {
+          this.errorMessage.set('');
+          this.errors.set({});
+
+          const updatedEvent = field().value();
+
+          try {
+            const response = await firstValueFrom(
+              this.eventService.updateEvent(this.eventId, updatedEvent),
+            );
+
+            console.log('Event updated successfully!', response);
+
+            await this.router.navigate(['/events']);
+
+            return undefined;
+          } catch (error) {
+            console.error('Error updating event:', error);
+
+            const message =
+              error instanceof HttpErrorResponse
+                ? error.error?.message || 'Could not update event.'
+                : 'Could not update event.';
+
+            this.errorMessage.set(message);
+
+            if (error instanceof HttpErrorResponse && error.error?.errors) {
+              this.errors.set(error.error.errors);
+            }
+
+            return {
+              kind: 'serverError',
+              message,
+            };
+          }
+        },
+      },
+    },
+  );
+
+  constructor(
+    private eventService: EventService,
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {}
+
+  ngOnInit(): void {
+    this.eventId = this.route.snapshot.paramMap.get('id') || '';
+
+    if (this.eventId) {
+      this.loadEvent();
+    } else {
+      this.errorMessage.set('Invalid event ID.');
+    }
+  }
+
+  async loadEvent(): Promise<void> {
+    try {
+      const loadedEvent = await firstValueFrom<EditEvent>(this.eventService.getEventById(this.eventId));
+
+      const eventData: EditEvent = {
+        name: loadedEvent.name,
+        description: loadedEvent.description,
+        venue: loadedEvent.venue,
+        location: loadedEvent.location,
+        price: loadedEvent.price,
+        startDate: loadedEvent.startDate?.slice(0, 16) || '',
+        endDate: loadedEvent.endDate?.slice(0, 16) || '',
+      };
+
+      this.eventRequest.set(eventData);
+      this.event.set(eventData);
+    } catch (error) {
+      console.error('Could not load event:', error);
+      this.errorMessage.set('Could not load event.');
+    }
+  }
+}
